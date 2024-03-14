@@ -47,6 +47,7 @@ def calculate_supertrend(df, period, multiplier):
         df.at[i, 'supertrend'] = df.at[i - 1, 'upper_band'] if df.at[i - 1, 'supertrend'] <= df.at[i - 1, 'upper_band'] else df.at[i - 1, 'lower_band']
     return df['supertrend']
 
+
 # Function to place a market buy order
 def place_market_buy_order(symbol, quantity):
     try:
