@@ -45,6 +45,13 @@ def calculate_supertrend(df, period, multiplier):
 
     return supertrend
 
+def fetch_ohlcv(symbol, timeframe, limit):
+    ohlcv = exchange.fetch_ohlcv(symbol, timeframe, limit=limit)
+    df = pd.DataFrame(ohlcv, columns=['timestamp', 'open', 'high', 'low', 'close', 'volume'])
+    df['tr'] = df['high'] - df['low']  # Calculate True Range
+    df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms')
+    df.set_index('timestamp', inplace=True)
+    return df
 
 
 # Function to place a market buy order
