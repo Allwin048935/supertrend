@@ -35,17 +35,16 @@ def fetch_ohlcv(symbol, timeframe, limit):
 
 # Function to calculate Supertrend
 def calculate_supertrend(df, period, multiplier):
-    df['tr0'] = abs(df['high'] - df['low'])
-    df['tr1'] = abs(df['high'] - df['close'].shift())
-    df['tr2'] = abs(df['low'] - df['close'].shift())
-    df['tr'] = df[['tr0', 'tr1', 'tr2']].max(axis=1)
-    df['atr'] = df['tr'].rolling(period).mean()
-    df['upper_band'] = (df['high'] + df['low']) / 2 + multiplier * df['atr']
-    df['lower_band'] = (df['high'] + df['low']) / 2 - multiplier * df['atr']
-    df['supertrend'] = 0.0
+    atr = df['tr'].rolling(period).mean()
+    upper_band = (df['high'] + df['low']) / 2 + multiplier * atr
+    lower_band = (df['high'] + df['low']) / 2 - multiplier * atr
+    supertrend = [0.0] * len(df)
+
     for i in range(1, len(df)):
-        df.at[i, 'supertrend'] = df.at[i - 1, 'upper_band'] if df.at[i - 1, 'supertrend'] <= df.at[i - 1, 'upper_band'] else df.at[i - 1, 'lower_band']
-    return df['supertrend']
+        supertrend[i] = upper_band.iloc[i - 1] if supertrend[i - 1] <= upper_band.iloc[i - 1] else lower_band.iloc[i - 1]
+
+    return supertrend
+
 
 
 # Function to place a market buy order
