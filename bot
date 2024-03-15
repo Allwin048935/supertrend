@@ -94,7 +94,7 @@ def supertrend_strategy():
                 historical_data['supertrend'] = calculate_supertrend(historical_data, period, multiplier)
 
                 # Fetch the latest candlestick for each symbol
-                latest_candle = exchange.fetch_ohlcv(symbol, '1d', limit=1)
+                latest_candle = exchange.fetch_ohlcv(symbol, '15m', limit=1)
                 latest_open = latest_candle[0][1]  # Open price of the latest candle
 
                 # Determine buy and sell signals
