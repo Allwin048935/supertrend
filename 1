@@ -87,18 +87,18 @@ def supertrend_strategy():
                 print(f"Supertrend value for {symbol}: {historical_data.iloc[-1]['supertrend']}")
 
                 # Fetch the latest candlestick for each symbol
-                latest_candle = exchange.fetch_ohlcv(symbol, '15m', limit=1)
+                latest_candle = exchange.fetch_ohlcv(symbol, '15m', limit=10)
                 latest_open = latest_candle[0][1]  # Open price of the latest candle
 
                 # Determine buy and sell signals
-                supertrend_signal_2 = historical_data.iloc[-2]['supertrend']
+                supertrend_signal = historical_data.iloc[-1]['supertrend']
                 current_close_2 = historical_data.iloc[-2]['close']
-                supertrend_signal_3 = historical_data.iloc[-3]['supertrend']
+                #supertrend_signal_3 = historical_data.iloc[-3]['supertrend']
                 current_close_3 = historical_data.iloc[-3]['close']
                 
                 if (
-                   current_close_2 >= supertrend_signal_2 and
-                   current_close_3 <= supertrend_signal_3 and
+                   current_close_2 >= supertrend_signal and
+                   current_close_3 <= supertrend_signal and
                    last_order_types[symbol] != 'BUY'
                 ):
                    print(f'{symbol} Buy Signal (Supertrend)')
@@ -108,13 +108,17 @@ def supertrend_strategy():
                    open_orders[symbol] = place_market_buy_order(symbol, quantity)
                    last_order_types[symbol] = 'BUY'
 
-                elif current_close < supertrend_signal and last_order_types[symbol] != 'SELL':
-                    print(f'{symbol} Sell Signal (Supertrend)')
-                    # Implement your sell logic here for futures
-                    # For example, place a market sell order
-                    quantity = fixed_quantity_usdt / float(current_close)
-                    open_orders[symbol] = place_market_sell_order(symbol, quantity)
-                    last_order_types[symbol] = 'SELL'
+                elif (
+                   current_close_2 <= supertrend_signal and
+                   current_close_3 >= supertrend_signal and
+                   last_order_types[symbol] != 'SELL'
+                ):
+                   print(f'{symbol} Sell Signal (Supertrend)')
+                   # Implement your sell logic here for futures
+                   # For example, place a market sell order
+                   quantity = fixed_quantity_usdt / float(current_close)
+                   open_orders[symbol] = place_market_sell_order(symbol, quantity)
+                   last_order_types[symbol] = 'SELL'
 
             # Sleep for some time (e.g., 5 minutes) before checking again
             time.sleep(60)
