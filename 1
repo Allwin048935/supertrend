@@ -91,10 +91,11 @@ def supertrend_strategy():
                 latest_open = latest_candle[0][1]  # Open price of the latest candle
 
                 # Determine buy and sell signals
-                supertrend_signal = historical_data.iloc[-1]['supertrend']
-                current_close = historical_data.iloc[-1]['close']
+                supertrend_signal = historical_data.iloc[-2]['supertrend']
+                current_close = historical_data.iloc[-2]['close']
 
-                if current_close > supertrend_signal and last_order_types[symbol] != 'BUY':
+                if current_close > supertrend_signal and
+ last_order_types[symbol] != 'BUY':
                     print(f'{symbol} Buy Signal (Supertrend)')
                     # Implement your buy logic here for futures
                     # For example, place a market buy order
