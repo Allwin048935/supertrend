@@ -98,7 +98,6 @@ def supertrend_strategy():
                 
                 if (
                    current_close_2 >= supertrend_signal and
-                   current_close_3 <= supertrend_signal and
                    last_order_types[symbol] != 'BUY'
                 ):
                    print(f'{symbol} Buy Signal (Supertrend)')
@@ -110,7 +109,6 @@ def supertrend_strategy():
 
                 elif (
                    current_close_2 <= supertrend_signal and
-                   current_close_3 >= supertrend_signal and
                    last_order_types[symbol] != 'SELL'
                 ):
                    print(f'{symbol} Sell Signal (Supertrend)')
